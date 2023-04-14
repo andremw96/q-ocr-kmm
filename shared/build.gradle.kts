@@ -3,6 +3,9 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("kotlin-kapt")
+    id("kotlinx-serialization")
+    id("kotlin-parcelize")
 }
 
 kotlin {
@@ -31,6 +34,10 @@ kotlin {
     }
     
     sourceSets {
+        val koinVersion = rootProject.extra["koinVersion"]
+        val ktorVersion = rootProject.extra["ktorVersion"]
+        val coroutineVersion = rootProject.extra["coroutineVersion"]
+
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
@@ -38,6 +45,18 @@ kotlin {
                 implementation(compose.material)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+
+                // Koin Core features
+                api("io.insert-koin:koin-core:$koinVersion")
+                api("io.insert-koin:koin-test:$koinVersion")
+
+                // Ktor
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging:$ktorVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
             }
         }
         val commonTest by getting {
@@ -56,6 +75,9 @@ kotlin {
                 api("androidx.compose.foundation:foundation:$androidComposeVersion")
                 api("androidx.compose.material:material:$androidComposeVersion")
                 api("androidx.activity:activity-compose:$activityComposeVersion")
+
+                implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
             }
         }
         val iosX64Main by getting
@@ -66,6 +88,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+            }
         }
     }
 }
