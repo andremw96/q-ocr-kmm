@@ -14,13 +14,13 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    val getCompletions: ChatGptService by inject()
+    val getCompletions: GetCompletions by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         GlobalScope.launch {
-            val response = getCompletions.completions(
+            val response = getCompletions.invoke(
                 CompletionRequest(
                     model = "text-davinci-003",
                     prompt = "Say this is a test",
