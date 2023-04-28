@@ -1,4 +1,13 @@
 buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        google()
+    }
+    dependencies {
+        classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.13.3")
+    }
+
     extra.apply {
         set("androidComposeVersion", "1.4.1")
         set("activityComposeVersion", "1.7.0")
@@ -23,6 +32,13 @@ plugins {
     kotlin("android").version("1.8.20").apply(false)
     id("org.jetbrains.compose").version("1.4.0")apply(false)
     kotlin("plugin.serialization").version("1.7.10").apply(false)
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 
 tasks.register("clean", Delete::class) {

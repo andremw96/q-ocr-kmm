@@ -1,3 +1,5 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -6,6 +8,16 @@ plugins {
     id("kotlin-kapt")
     id("kotlinx-serialization")
     id("kotlin-parcelize")
+    id("com.codingfeline.buildkonfig")
+}
+
+buildkonfig {
+    packageName = "com.andremw96.qocrkmm"
+
+    defaultConfigs {
+        buildConfigField(STRING, "BASE_API_URL", "https://api.openai.com/v1/")
+        buildConfigField(STRING, "CHAT_GPT_API_KEY", "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")
+    }
 }
 
 kotlin {

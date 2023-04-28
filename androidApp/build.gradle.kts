@@ -9,7 +9,14 @@ kotlin {
     sourceSets {
         val androidMain by getting {
             dependencies {
+                val koinVersion = rootProject.extra["koinVersion"]
+
                 implementation(project(":shared"))
+
+                // koin
+                implementation("io.insert-koin:koin-android:$koinVersion")
+                implementation("io.insert-koin:koin-core:$koinVersion")
+                implementation ("io.insert-koin:koin-androidx-compose:$koinVersion")
             }
         }
     }

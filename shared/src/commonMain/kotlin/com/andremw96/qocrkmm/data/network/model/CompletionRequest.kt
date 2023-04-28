@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CompletionRequest(
     @SerialName("logprobs")
-    val logprobs: Int,
+    val logprobs: Int? = null,
     @SerialName("max_tokens")
     val maxTokens: Int,
     @SerialName("model")
