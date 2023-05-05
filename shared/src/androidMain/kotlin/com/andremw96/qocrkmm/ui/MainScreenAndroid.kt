@@ -7,5 +7,5 @@ import androidx.compose.ui.graphics.asImageBitmap
 @Composable
 fun MainScreenAndroid(
     bitmapImageResult: Bitmap?,
-    openCameraClicked: (Boolean) -> Unit,
+    openCameraClicked: () -> Unit,
 ) = MainScreen(openCameraClicked, bitmap = bitmapImageResult?.asImageBitmap())

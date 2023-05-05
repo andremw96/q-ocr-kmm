@@ -23,8 +23,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreenAndroid(bitmapImageResult.value) { openCameraClicked ->
-                shouldShowCamera.value = openCameraClicked
+            MainScreenAndroid(bitmapImageResult.value) {
+                shouldShowCamera.value = true
             }
 
             if (shouldShowCamera.value) {

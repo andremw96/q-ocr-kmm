@@ -12,12 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.andremw96.qocrkmm.android.MyApplicationTheme
 
 @Composable
 fun MainScreen(
-    openCameraClicked: (Boolean) -> Unit,
+    openCameraClicked: () -> Unit,
     bitmap: ImageBitmap?,
 ) {
     MyApplicationTheme {
@@ -30,7 +31,7 @@ fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(onClick = {
-                    openCameraClicked(true)
+                    openCameraClicked()
                 }) {
                     Text("Open Camera!")
                 }

@@ -6,8 +6,7 @@ import com.andremw96.qocrkmm.ui.MainScreen
 import org.jetbrains.skia.Image
 
 fun MainViewController(
-    openCameraClicked: (Boolean) -> Unit,
-    bitmapImageResult: Image?,
+    openCameraClicked: () -> Unit,
 ) = ComposeUIViewController {
-    MainScreen(openCameraClicked, bitmapImageResult?.toComposeImageBitmap())
+    MainScreen(openCameraClicked, null)
 }

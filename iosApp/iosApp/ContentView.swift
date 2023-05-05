@@ -19,21 +19,19 @@ extension UIViewController {
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainScreenIosKt.MainViewController(openCameraClicked: { openCameraClicked in
-            if openCameraClicked as! Bool {
-                if let topViewController = UIApplication.shared.windows.first?.rootViewController?.topViewController {
-                    topViewController.present(
-                        UIHostingController(
-                            rootView: MyPickerView(onButtonDismissClicked: {
-                                topViewController.dismiss(animated: true)
-                            })
-                        ),
-                        animated: true,
-                        completion: nil
-                    )
-                }
+        MainScreenIosKt.MainViewController(openCameraClicked: {
+            if let topViewController = UIApplication.shared.windows.first?.rootViewController?.topViewController {
+                topViewController.present(
+                    UIHostingController(
+                        rootView: MyPickerView(onButtonDismissClicked: {
+                            topViewController.dismiss(animated: true)
+                        })
+                    ),
+                    animated: true,
+                    completion: nil
+                )
             }
-        }, bitmapImageResult: )
+        })
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
