@@ -3,7 +3,7 @@ import shared
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainScreenIosKt.MainViewController()
+        MainScreenIosKt.MainViewController(shouldShowCamera: true as! RuntimeMutableState)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

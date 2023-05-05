@@ -21,6 +21,9 @@ buildscript {
 
         // gson
         set("gsonVersion", "2.10")
+
+        // cameraX
+        set("cameraxVersion", "1.2.2")
     }
 }
 

@@ -10,13 +10,22 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 val koinVersion = rootProject.extra["koinVersion"]
+                val cameraxVersion = rootProject.extra["cameraxVersion"]
+                val coroutineVersion = rootProject.extra["coroutineVersion"]
 
                 implementation(project(":shared"))
 
                 // koin
                 implementation("io.insert-koin:koin-android:$koinVersion")
                 implementation("io.insert-koin:koin-core:$koinVersion")
-                implementation ("io.insert-koin:koin-androidx-compose:$koinVersion")
+                implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
+
+                // camerax
+                implementation("androidx.camera:camera-camera2:$cameraxVersion")
+                implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+                implementation("androidx.camera:camera-view:$cameraxVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
             }
         }
     }
