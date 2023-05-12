@@ -12,11 +12,11 @@ import SwiftUI
 struct MyImagePickerView: UIViewControllerRepresentable {
     
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    @Binding var image: Image?
-    @Binding var isPresented: Bool
+    @Binding var image: UIImage?
+    let shouldDismissImagePickerView: () -> Void
     
     func makeCoordinator() -> ImagePickerViewCoordinator {
-        return ImagePickerViewCoordinator(image: $image, isPresented: $isPresented)
+        return ImagePickerViewCoordinator(image: $image, shouldDismissImagePickerView: shouldDismissImagePickerView)
     }
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -28,29 +28,30 @@ struct MyImagePickerView: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
         // Nothing to update here
+        
     }
 
 }
 
 class ImagePickerViewCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
-    @Binding var image: Image?
-    @Binding var isPresented: Bool
+    @Binding var image: UIImage?
+    let shouldDismissImagePickerView: () -> Void
     
-    init(image: Binding<Image?>, isPresented: Binding<Bool>) {
+    init(image: Binding<UIImage?>, shouldDismissImagePickerView: @escaping () -> Void) {
         self._image = image
-        self._isPresented = isPresented
+        self.shouldDismissImagePickerView = shouldDismissImagePickerView
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            self.image = Image(uiImage: image)
+            self.image = image
         }
-        self.isPresented = false
+        self.shouldDismissImagePickerView()
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.isPresented = false
+        self.shouldDismissImagePickerView()
     }
     
 }

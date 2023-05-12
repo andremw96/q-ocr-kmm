@@ -1,10 +1,7 @@
 package com.andremw96.qocrkmm.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -28,15 +25,16 @@ fun MainScreen(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(onClick = {
                     openCameraClicked()
                 }) {
                     Text("Open Camera!")
                 }
-
+                println("show image bitmap $bitmap")
                 if (bitmap != null) {
+                    println("show image bitmap $bitmap")
                     Image(bitmap = bitmap, "")
                 }
             }

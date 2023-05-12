@@ -18,12 +18,16 @@ extension UIViewController {
 
 
 struct ComposeView: UIViewControllerRepresentable {
+    @State private var image: UIImage? = UIImage()
+    
     func makeUIViewController(context: Context) -> UIViewController {
         MainScreenIosKt.MainViewController(openCameraClicked: {
+            print("makeui")
+            print(self.$image)
             if let topViewController = UIApplication.shared.windows.first?.rootViewController?.topViewController {
                 topViewController.present(
                     UIHostingController(
-                        rootView: MyPickerView(onButtonDismissClicked: {
+                        rootView: MyPickerView(image: self.$image, onButtonDismissClicked: {
                             topViewController.dismiss(animated: true)
                         })
                     ),
@@ -31,16 +35,18 @@ struct ComposeView: UIViewControllerRepresentable {
                     completion: nil
                 )
             }
-        })
+        }, image: image ?? UIImage())
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        
+        print("updateui")
+        print(self.$image)
     }
 }
 
 struct MyPickerView: View {
-    @State private var image: Image? = Image("")
+    @Binding var image: UIImage?
+    
     @State private var shouldPresentImagePicker = false
     @State private var shouldPresentActionScheet = false
     @State private var shouldPresentCamera = false
@@ -53,7 +59,7 @@ struct MyPickerView: View {
             MyImagePickerView(
                 sourceType: .photoLibrary,
                 image: self.$image,
-                isPresented: self.$shouldPresentImagePicker
+                shouldDismissImagePickerView: onButtonDismissClicked
             )
             
 //            image!
