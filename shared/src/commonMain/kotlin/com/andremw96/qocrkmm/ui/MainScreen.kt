@@ -15,12 +15,13 @@ import com.andremw96.qocrkmm.android.MyApplicationTheme
 
 @Composable
 fun MainScreen(
+    modifier: Modifier,
     openCameraClicked: () -> Unit,
     bitmap: ImageBitmap?,
 ) {
     MyApplicationTheme {
         Scaffold(
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier
                 .padding(4.dp)
         ) {
             Column(
@@ -32,9 +33,7 @@ fun MainScreen(
                 }) {
                     Text("Open Camera!")
                 }
-                println("show image bitmap $bitmap")
                 if (bitmap != null) {
-                    println("show image bitmap $bitmap")
                     Image(bitmap = bitmap, "")
                 }
             }

@@ -9,14 +9,34 @@
 import UIKit
 import SwiftUI
 
+struct MyPickerView: View {
+    let onButtonDismissClicked: ((UIImage?)) -> Void
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            MyImagePickerView(
+                sourceType: .photoLibrary,
+                shouldDismissImagePickerView: onButtonDismissClicked
+            )
+            
+            Spacer()
+            
+            Button("Dismiss", action: {
+                onButtonDismissClicked(nil)
+            })
+        }
+    }
+}
+
 struct MyImagePickerView: UIViewControllerRepresentable {
     
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    @Binding var image: UIImage?
-    let shouldDismissImagePickerView: () -> Void
+    let shouldDismissImagePickerView: ((UIImage?)) -> Void
     
     func makeCoordinator() -> ImagePickerViewCoordinator {
-        return ImagePickerViewCoordinator(image: $image, shouldDismissImagePickerView: shouldDismissImagePickerView)
+        return ImagePickerViewCoordinator(shouldDismissImagePickerView: shouldDismissImagePickerView)
     }
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -35,23 +55,20 @@ struct MyImagePickerView: UIViewControllerRepresentable {
 
 class ImagePickerViewCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
-    @Binding var image: UIImage?
-    let shouldDismissImagePickerView: () -> Void
+    let shouldDismissImagePickerView: ((UIImage?)) -> Void
     
-    init(image: Binding<UIImage?>, shouldDismissImagePickerView: @escaping () -> Void) {
-        self._image = image
+    init(shouldDismissImagePickerView: @escaping ((UIImage?)) -> Void) {
         self.shouldDismissImagePickerView = shouldDismissImagePickerView
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            self.image = image
+            self.shouldDismissImagePickerView(image)
         }
-        self.shouldDismissImagePickerView()
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.shouldDismissImagePickerView()
+        self.shouldDismissImagePickerView(nil)
     }
     
 }
