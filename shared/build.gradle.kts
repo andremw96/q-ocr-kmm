@@ -80,6 +80,7 @@ kotlin {
             dependencies {
                 val androidComposeVersion = rootProject.extra["androidComposeVersion"]
                 val activityComposeVersion = rootProject.extra["activityComposeVersion"]
+                val cameraxVersion = rootProject.extra["cameraxVersion"]
 
                 api("androidx.compose.ui:ui:$androidComposeVersion")
                 api("androidx.compose.ui:ui-tooling:$androidComposeVersion")
@@ -87,9 +88,18 @@ kotlin {
                 api("androidx.compose.foundation:foundation:$androidComposeVersion")
                 api("androidx.compose.material:material:$androidComposeVersion")
                 api("androidx.activity:activity-compose:$activityComposeVersion")
+                implementation("com.google.accompanist:accompanist-permissions:0.29.2-rc")
 
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+
+                // camerax
+                implementation("androidx.camera:camera-camera2:$cameraxVersion")
+                implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+                implementation("androidx.camera:camera-view:$cameraxVersion")
+
+                // mlkit
+                implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0")
             }
         }
         val iosX64Main by getting

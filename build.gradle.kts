@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.13.3")
+        classpath("com.google.gms:google-services:4.3.15")
     }
 
     extra.apply {

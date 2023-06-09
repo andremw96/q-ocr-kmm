@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "305676600301",
+    "project_id": "q-ocr-app",
+    "storage_bucket": "q-ocr-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305676600301:android:a0a05848bf3c0d833d9de4",
+        "android_client_info": {
+          "package_name": "com.andremw96.qocrkmm.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305676600301-h55spsei3p2v7mff88d7ljb1k17qidja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDss6IMS_he-H4mO9jV8DWzY7hymwx6VDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305676600301-h55spsei3p2v7mff88d7ljb1k17qidja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305676600301:android:486db72ad830756b3d9de4",
+        "android_client_info": {
+          "package_name": "com.example.qocrapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305676600301-h55spsei3p2v7mff88d7ljb1k17qidja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDss6IMS_he-H4mO9jV8DWzY7hymwx6VDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305676600301-h55spsei3p2v7mff88d7ljb1k17qidja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,14 +17,6 @@ struct ContentView: View {
         } else {
             Text("please select image")
         }
-        
-//        VStack {
-//            Spacer()
-//
-//
-//
-//            Spacer()
-//        }
     }
 }
 

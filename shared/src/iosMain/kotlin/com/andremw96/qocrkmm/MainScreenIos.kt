@@ -27,6 +27,3 @@ fun MainViewController(
         bitmap = null
     )
 }
-
-fun ByteArray.toImageBitmap(): ImageBitmap =
-    Image.makeFromEncoded(this).toComposeImageBitmap()
