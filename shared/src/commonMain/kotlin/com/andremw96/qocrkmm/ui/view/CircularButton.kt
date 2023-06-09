@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.andremw96.qocrkmm.ui.icon.IconCustomArrowBack
 
 @Composable
 fun CircularButton(
@@ -50,6 +51,14 @@ fun CircularButton(
             Icon(imageVector, null, Modifier.size(34.dp), Color.White)
         },
         enabled = enabled,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun BackButton(onClick: () -> Unit) {
+    CircularButton(
+        imageVector = IconCustomArrowBack,
         onClick = onClick
     )
 }

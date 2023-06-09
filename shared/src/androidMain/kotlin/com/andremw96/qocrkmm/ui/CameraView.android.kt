@@ -98,7 +98,6 @@ private fun CameraWithGrantedPermission(
         preview.setSurfaceProvider(previewView.surfaceProvider)
     }
     var capturePhotoStarted by remember { mutableStateOf(false) }
-    var generatingText by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.pointerInput(isFrontCamera) {
         detectHorizontalDragGestures { _, dragAmount ->
@@ -116,15 +115,13 @@ private fun CameraWithGrantedPermission(
             capturePhotoStarted = true
             imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
-                    capturePhotoStarted = false
-                    generatingText = true
                     imageProxy.image?.let {
                         generateTextFromImage(
                             imageProxy = imageProxy,
                             rotationDegrees = imageProxy.imageInfo.rotationDegrees,
                             onTextGenerated = onTextGenerated,
                         )
-                        generatingText = false
+                        capturePhotoStarted = false
                     }
                     imageProxy.close()
                 }
@@ -135,7 +132,7 @@ private fun CameraWithGrantedPermission(
                 }
             })
         }
-        if (capturePhotoStarted || generatingText) {
+        if (capturePhotoStarted) {
             CircularProgressIndicator(
                 modifier = Modifier.size(80.dp).align(Alignment.Center),
                 color = Color.Cyan.copy(alpha = 0.7f),

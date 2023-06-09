@@ -60,7 +60,9 @@ fun MainScreen(
                     is ExtractedTextScreen -> {
                         ExtractedTextResultScreen(
                             page.extractedText, page.capturedImage
-                        )
+                        ) {
+                            navigationStack.back()
+                        }
                     }
                 }
             }
