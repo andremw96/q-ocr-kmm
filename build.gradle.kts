@@ -25,6 +25,9 @@ buildscript {
 
         // cameraX
         set("cameraxVersion", "1.2.2")
+
+        // compose navigation version
+        set("androidComposeNavVersion", "2.5.2")
     }
 }
 
