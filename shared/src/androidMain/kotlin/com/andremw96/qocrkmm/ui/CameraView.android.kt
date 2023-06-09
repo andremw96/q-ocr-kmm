@@ -16,17 +16,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.andremw96.qocrkmm.toImageBitmap
 import com.andremw96.qocrkmm.ui.icon.IconPhotoCamera
 import com.andremw96.qocrkmm.ui.view.CircularButton
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -39,7 +38,7 @@ private val executor = Executors.newSingleThreadExecutor()
 @Composable
 actual fun CameraView(
     modifier: Modifier,
-    onTextGenerated: (text: String) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
 ) {
     val cameraPermissionState = rememberMultiplePermissionsState(
         listOf(
@@ -60,7 +59,7 @@ actual fun CameraView(
 @Composable
 private fun CameraWithGrantedPermission(
     modifier: Modifier,
-    onTextGenerated: (text: String) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -117,13 +116,11 @@ private fun CameraWithGrantedPermission(
             capturePhotoStarted = true
             imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
-                    val byteArray: ByteArray = imageProxy.planes[0].buffer.toByteArray()
-                    val imageBitmap = byteArray.toImageBitmap()
                     capturePhotoStarted = false
                     generatingText = true
                     imageProxy.image?.let {
                         generateTextFromImage(
-                            imageResult = it,
+                            imageProxy = imageProxy,
                             rotationDegrees = imageProxy.imageInfo.rotationDegrees,
                             onTextGenerated = onTextGenerated,
                         )
@@ -146,11 +143,4 @@ private fun CameraWithGrantedPermission(
             )
         }
     }
-}
-
-private fun ByteBuffer.toByteArray(): ByteArray {
-    rewind()    // Rewind the buffer to zero
-    val data = ByteArray(remaining())
-    get(data)   // Copy the buffer into a byte array
-    return data // Return the byte array
 }

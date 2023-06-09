@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.unit.dp
 import com.andremw96.qocrkmm.ui.icon.IconPhotoCamera
@@ -46,7 +47,7 @@ private val deviceTypes = listOf(
 @Composable
 actual fun CameraView(
     modifier: Modifier,
-    onTextGenerated: (text: String) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
 ) {
     var cameraAccess: CameraAccess by remember { mutableStateOf(CameraAccess.Undefined) }
     LaunchedEffect(Unit) {
@@ -90,7 +91,7 @@ actual fun CameraView(
 
 @Composable
 private fun BoxScope.AuthorizedCamera(
-    onTextGenerated: (text: String) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap) -> Unit
 ) {
     val camera: AVCaptureDevice? = remember {
         AVCaptureDeviceDiscoverySession.discoverySessionWithDeviceTypes(
@@ -114,7 +115,7 @@ private fun BoxScope.AuthorizedCamera(
 @Composable
 private fun BoxScope.RealDeviceCamera(
     camera: AVCaptureDevice,
-    onTextGenerated: (text: String) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap) -> Unit
 ) {
     val capturePhotoOutput = remember { AVCapturePhotoOutput() }
     var actualOrientation by remember {

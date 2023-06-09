@@ -24,10 +24,6 @@ fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CameraScreen()
-
-//                if (bitmap != null) {
-//                    Image(bitmap = bitmap, "")
-//                }
             }
         }
     }
