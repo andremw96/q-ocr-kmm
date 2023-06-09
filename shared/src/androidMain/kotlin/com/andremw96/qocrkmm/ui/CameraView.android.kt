@@ -26,7 +26,6 @@ import com.andremw96.qocrkmm.ui.icon.IconPhotoCamera
 import com.andremw96.qocrkmm.ui.view.CircularButton
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
