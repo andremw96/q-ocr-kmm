@@ -1,8 +1,8 @@
 package com.andremw96.qocrkmm.ui
 
-import android.util.Log
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.ImageBitmap
 import com.andremw96.qocrkmm.toImageBitmap
 import com.google.mlkit.vision.common.InputImage
@@ -14,7 +14,8 @@ import java.nio.ByteBuffer
 fun generateTextFromImage(
     imageProxy: ImageProxy,
     rotationDegrees: Int,
-    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit,
+    capturePhotoStarted: MutableState<Boolean>,
 ) {
     if (imageProxy.image != null) {
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -35,12 +36,15 @@ fun generateTextFromImage(
                     stringBuilder.append("\n\n")
                 }
                 onTextGenerated(stringBuilder.toString(), imageBitmap)
+                capturePhotoStarted.value = false
             }
             .addOnFailureListener { e ->
-                Log.d("Generated text", e.localizedMessage)
+                onTextGenerated(e.localizedMessage, imageBitmap)
+                capturePhotoStarted.value = false
             }
     } else {
         onTextGenerated("text not found", null)
+        capturePhotoStarted.value = false
     }
 }
 

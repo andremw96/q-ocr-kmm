@@ -38,7 +38,7 @@ private val executor = Executors.newSingleThreadExecutor()
 @Composable
 actual fun CameraView(
     modifier: Modifier,
-    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?,) -> Unit
 ) {
     val cameraPermissionState = rememberMultiplePermissionsState(
         listOf(
@@ -97,7 +97,7 @@ private fun CameraWithGrantedPermission(
         )
         preview.setSurfaceProvider(previewView.surfaceProvider)
     }
-    var capturePhotoStarted by remember { mutableStateOf(false) }
+    val capturePhotoStarted = remember { mutableStateOf(false) }
 
     Box(modifier = modifier.pointerInput(isFrontCamera) {
         detectHorizontalDragGestures { _, dragAmount ->
@@ -110,9 +110,9 @@ private fun CameraWithGrantedPermission(
         CircularButton(
             imageVector = IconPhotoCamera,
             modifier = Modifier.align(Alignment.BottomCenter).padding(36.dp),
-            enabled = !capturePhotoStarted,
+            enabled = !capturePhotoStarted.value,
         ) {
-            capturePhotoStarted = true
+            capturePhotoStarted.value = true
             imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
                     imageProxy.image?.let {
@@ -120,8 +120,8 @@ private fun CameraWithGrantedPermission(
                             imageProxy = imageProxy,
                             rotationDegrees = imageProxy.imageInfo.rotationDegrees,
                             onTextGenerated = onTextGenerated,
+                            capturePhotoStarted = capturePhotoStarted
                         )
-                        capturePhotoStarted = false
                     }
                     imageProxy.close()
                 }
@@ -129,10 +129,11 @@ private fun CameraWithGrantedPermission(
                 override fun onError(exception: ImageCaptureException) {
                     super.onError(exception)
                     Log.e("cameraview", exception.localizedMessage)
+                    capturePhotoStarted.value = false
                 }
             })
         }
-        if (capturePhotoStarted) {
+        if (capturePhotoStarted.value) {
             CircularProgressIndicator(
                 modifier = Modifier.size(80.dp).align(Alignment.Center),
                 color = Color.Cyan.copy(alpha = 0.7f),
