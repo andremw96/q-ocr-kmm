@@ -43,6 +43,12 @@ kotlin {
             isStatic = true
         }
         extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
+        pod("GoogleMLKit/TextRecognition") {
+            moduleName = "MLKitTextRecognition"
+        }
+        pod("GoogleMLKit/Vision") {
+            moduleName = "MLKitVision"
+        }
     }
     
     sourceSets {

@@ -11,11 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.unit.dp
+import com.andremw96.qocrkmm.getTempImageURL
+import com.andremw96.qocrkmm.readBytes
+import com.andremw96.qocrkmm.toImageBitmap
 import com.andremw96.qocrkmm.ui.icon.IconPhotoCamera
 import com.andremw96.qocrkmm.ui.view.CircularButton
 import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ObjCAction
 import kotlinx.cinterop.useContents
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import platform.AVFoundation.*
 import platform.CoreGraphics.CGRect
 import platform.CoreLocation.CLLocation
@@ -134,7 +139,7 @@ private fun BoxScope.RealDeviceCamera(
                 val photoData = didFinishProcessingPhoto.fileDataRepresentation()
                 if (photoData != null) {
                     val uiImage = UIImage(photoData)
-
+                    generateTextFromImage(uiImage, onTextGenerated)
                 }
                 capturePhotoStarted = false
             }
