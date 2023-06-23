@@ -3,18 +3,23 @@ package com.andremw96.qocrkmm.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
-import com.andremw96.qocrkmm.ui.view.BackButton
-import com.andremw96.qocrkmm.ui.view.TopLayout
+
+enum class ChipActionItem(val string: String) {
+    SUMMARY("summary"),
+    OUTLINE("outline"),
+}
 
 @Composable
 fun ExtractedTextResultScreen(
@@ -22,6 +27,8 @@ fun ExtractedTextResultScreen(
     image: ImageBitmap,
     onBack: (Boolean) -> Unit,
 ) {
+    val selectedChip = remember { mutableStateOf(ChipActionItem.SUMMARY) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,45 +60,57 @@ fun ExtractedTextResultScreen(
             }
         },
         bottomBar = {
-            Column(
-                modifier = Modifier
-                    .background(Color.LightGray)
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Selectable Chips:",
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.subtitle1
-                )
-                SelectableChipRow(
-                    chipList = listOf("Chip 1", "Chip 2", "Chip 3"),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+            Column {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.LightGray)
+                ) {
+                    item {
+                        SelectableChipRow(
+                            chipList = ChipActionItem.values().toList(),
+                            selectedChip = selectedChip,
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                                  println("selectedchip ${selectedChip.value}")
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                    ) {
+                        Text(text = "Generate")
+                    }
+                }
             }
         }
     )
 }
 
 @Composable
-fun SelectableChipRow(chipList: List<String>, modifier: Modifier = Modifier) {
-    var selectedChips by remember { mutableStateOf(setOf<String>()) }
-
+fun SelectableChipRow(
+    chipList: List<ChipActionItem>,
+    modifier: Modifier = Modifier,
+    selectedChip: MutableState<ChipActionItem>,
+) {
     Row(modifier = modifier) {
         chipList.forEach { chipText ->
-            val isSelected = selectedChips.contains(chipText)
+            val isSelected = selectedChip.value == chipText
             ToggleButton(
                 checked = isSelected,
                 onCheckedChange = { isChecked ->
                     if (isChecked) {
-                        selectedChips += chipText
-                    } else {
-                        selectedChips -= chipText
+                        selectedChip.value = chipText
                     }
                 },
-                modifier = Modifier.padding(end = 8.dp)
             ) {
-                Text(text = chipText)
+                Text(text = chipText.string.uppercase())
             }
         }
     }
@@ -104,7 +123,9 @@ fun ToggleButton(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Row {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
