@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
+import com.andremw96.qocrkmm.data.network.model.CompletionRequest
+import com.andremw96.qocrkmm.domain.GetCompletions
+import kotlinx.coroutines.launch
 
 enum class ChipActionItem(val string: String) {
     SUMMARY("summary"),
@@ -26,8 +29,10 @@ fun ExtractedTextResultScreen(
     extractedText: String,
     image: ImageBitmap,
     onBack: (Boolean) -> Unit,
+    getCompletions: GetCompletions,
 ) {
     val selectedChip = remember { mutableStateOf(ChipActionItem.SUMMARY) }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -80,7 +85,13 @@ fun ExtractedTextResultScreen(
                 ) {
                     Button(
                         onClick = {
-                                  println("selectedchip ${selectedChip.value}")
+                            coroutineScope.launch {
+                                getCompletions.invoke(
+                                    CompletionRequest(
+                                        prompt = extractedText.replace("\n", " "),
+                                    )
+                                )
+                            }
                         },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)

@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.andremw96.qocrkmm.android.MyApplicationTheme
+import com.andremw96.qocrkmm.domain.GetCompletions
 import com.andremw96.qocrkmm.ui.navigation.CameraScreen
 import com.andremw96.qocrkmm.ui.navigation.ExtractedTextScreen
 import com.andremw96.qocrkmm.ui.navigation.NavigationStack
@@ -20,6 +21,7 @@ import com.andremw96.qocrkmm.ui.navigation.Screen
 @Composable
 fun MainScreen(
     modifier: Modifier,
+    getCompletions: GetCompletions,
 ) {
     MyApplicationTheme {
         Scaffold(
@@ -59,10 +61,13 @@ fun MainScreen(
                     }
                     is ExtractedTextScreen -> {
                         ExtractedTextResultScreen(
-                            page.extractedText, page.capturedImage
-                        ) {
-                            navigationStack.back()
-                        }
+                            extractedText = page.extractedText,
+                            image = page.capturedImage,
+                            onBack = {
+                                navigationStack.back()
+                            },
+                            getCompletions = getCompletions,
+                        )
                     }
                 }
             }

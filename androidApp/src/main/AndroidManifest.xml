@@ -8,6 +8,7 @@
     <application
         android:name=".QOcrApp"
         android:allowBackup="false"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
