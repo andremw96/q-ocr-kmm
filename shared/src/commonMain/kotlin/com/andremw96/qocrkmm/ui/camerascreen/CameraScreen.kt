@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui
+package com.andremw96.qocrkmm.ui.camerascreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import com.andremw96.qocrkmm.ui.CameraView
 import kotlinx.coroutines.delay
 
 @Composable

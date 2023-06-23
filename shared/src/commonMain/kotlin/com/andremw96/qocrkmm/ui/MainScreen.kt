@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.andremw96.qocrkmm.android.MyApplicationTheme
 import com.andremw96.qocrkmm.domain.GetCompletions
+import com.andremw96.qocrkmm.ui.camerascreen.CameraScreenComposable
+import com.andremw96.qocrkmm.ui.extractedtextscreen.ExtractedTextResultScreen
 import com.andremw96.qocrkmm.ui.navigation.CameraScreen
 import com.andremw96.qocrkmm.ui.navigation.ExtractedTextScreen
 import com.andremw96.qocrkmm.ui.navigation.NavigationStack

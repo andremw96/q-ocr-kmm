@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui
+package com.andremw96.qocrkmm.ui.extractedtextscreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +33,8 @@ fun ExtractedTextResultScreen(
 ) {
     val selectedChip = remember { mutableStateOf(ChipActionItem.SUMMARY) }
     val coroutineScope = rememberCoroutineScope()
+    val isGeneratingResult = remember { mutableStateOf(false) }
+    val viewState = remember { mutableStateOf(ExtractedTextResultState.default()) }
 
     Scaffold(
         topBar = {
@@ -46,22 +48,32 @@ fun ExtractedTextResultScreen(
             )
         },
         content = {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
-            ) {
-                Text(
-                    text = extractedText,
-                    modifier = Modifier.padding(vertical = 16.dp)
-                )
-                Image(
-                    bitmap = image,
-                    contentDescription = "My Image",
+            Box {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                )
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = extractedText,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
+                    Image(
+                        bitmap = image,
+                        contentDescription = "My Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
+                }
+
+                if (isGeneratingResult.value) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(80.dp).align(Alignment.Center),
+                        color = Color.Cyan.copy(alpha = 0.7f),
+                        strokeWidth = 8.dp,
+                    )
+                }
             }
         },
         bottomBar = {
@@ -85,12 +97,18 @@ fun ExtractedTextResultScreen(
                 ) {
                     Button(
                         onClick = {
+                            isGeneratingResult.value = true
+
                             coroutineScope.launch {
-                                getCompletions.invoke(
+                                val result = getCompletions.invoke(
                                     CompletionRequest(
                                         prompt = extractedText.replace("\n", " "),
                                     )
                                 )
+
+                                viewState.value = result.toState()
+
+                                isGeneratingResult.value = false
                             }
                         },
                         modifier = Modifier
