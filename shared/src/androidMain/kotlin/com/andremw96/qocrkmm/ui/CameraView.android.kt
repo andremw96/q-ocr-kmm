@@ -1,22 +1,28 @@
 package com.andremw96.qocrkmm.ui
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.os.Looper
 import android.util.Log
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -38,7 +44,7 @@ private val executor = Executors.newSingleThreadExecutor()
 @Composable
 actual fun CameraView(
     modifier: Modifier,
-    onTextGenerated: (text: String, image: ImageBitmap?,) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
 ) {
     val cameraPermissionState = rememberMultiplePermissionsState(
         listOf(
@@ -98,6 +104,10 @@ private fun CameraWithGrantedPermission(
         preview.setSurfaceProvider(previewView.surfaceProvider)
     }
     val capturePhotoStarted = remember { mutableStateOf(false) }
+    val generateTextStarted = remember { mutableStateOf(false) }
+    val capturedPhoto = remember {
+        mutableStateOf<Pair<Bitmap?, Int>?>(null)
+    }
 
     Box(modifier = modifier.pointerInput(isFrontCamera) {
         detectHorizontalDragGestures { _, dragAmount ->
@@ -106,34 +116,81 @@ private fun CameraWithGrantedPermission(
             }
         }
     }) {
-        AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
-        CircularButton(
-            imageVector = IconPhotoCamera,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(36.dp),
-            enabled = !capturePhotoStarted.value,
-        ) {
-            capturePhotoStarted.value = true
-            imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
-                override fun onCaptureSuccess(imageProxy: ImageProxy) {
-                    imageProxy.image?.let {
-                        generateTextFromImage(
-                            imageProxy = imageProxy,
-                            rotationDegrees = imageProxy.imageInfo.rotationDegrees,
-                            onTextGenerated = onTextGenerated,
-                            capturePhotoStarted = capturePhotoStarted
-                        )
-                    }
-                    imageProxy.close()
-                }
 
-                override fun onError(exception: ImageCaptureException) {
-                    super.onError(exception)
-                    Log.e("cameraview", exception.localizedMessage)
-                    capturePhotoStarted.value = false
-                }
-            })
+        if (capturedPhoto.value == null) {
+            AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
+            CircularButton(
+                imageVector = IconPhotoCamera,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(36.dp),
+                enabled = !capturePhotoStarted.value,
+            ) {
+                capturePhotoStarted.value = true
+                imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
+                    override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                        android.os.Handler(Looper.getMainLooper()).post {
+                            capturedPhoto.value = Pair(
+                                previewView.bitmap,
+                                imageProxy.imageInfo.rotationDegrees
+                            )
+                        }
+                        capturePhotoStarted.value = false
+                        imageProxy.close()
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        super.onError(exception)
+                        Log.e("cameraview", exception.localizedMessage)
+                        capturePhotoStarted.value = false
+                    }
+                })
+            }
         }
-        if (capturePhotoStarted.value) {
+
+        capturedPhoto.let { statePhoto ->
+            statePhoto.value?.let { bitmap ->
+                bitmap.first?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = "Your Image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+
+                    Button(
+                        onClick = {
+                            capturedPhoto.value = null
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(bottom = 16.dp, end = 16.dp)
+                    ) {
+                        Text("Take new image")
+                    }
+
+                    Button(
+                        onClick = {
+                            generateTextStarted.value = true
+
+                            generateTextFromImage(
+                                imageBitmap = it,
+                                rotationDegrees = bitmap.second,
+                                onTextGenerated = { generatedText, imageBitmap ->
+                                    onTextGenerated(generatedText, imageBitmap)
+                                },
+                                generateTextStarted = generateTextStarted,
+                            )
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(bottom = 16.dp, end = 16.dp)
+                    ) {
+                        Text("Generate Result")
+                    }
+                }
+            }
+        }
+
+        if (capturePhotoStarted.value || generateTextStarted.value) {
             CircularProgressIndicator(
                 modifier = Modifier.size(80.dp).align(Alignment.Center),
                 color = Color.Cyan.copy(alpha = 0.7f),

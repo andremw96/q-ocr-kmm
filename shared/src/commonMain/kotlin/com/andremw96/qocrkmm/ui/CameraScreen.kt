@@ -24,7 +24,6 @@ fun CameraScreenComposable(
         if (showCamera) {
             CameraView(Modifier.fillMaxSize(), onTextGenerated = { text, imageBitmap ->
                 if (imageBitmap != null) {
-                    println("generated text $text")
                     onTextGenerated(
                         text, imageBitmap
                     )
