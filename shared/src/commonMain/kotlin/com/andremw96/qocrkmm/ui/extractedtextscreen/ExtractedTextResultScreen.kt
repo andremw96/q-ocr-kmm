@@ -1,5 +1,8 @@
 package com.andremw96.qocrkmm.ui.extractedtextscreen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,7 @@ fun ExtractedTextResultScreen(
     val coroutineScope = rememberCoroutineScope()
     val isGeneratingResult = remember { mutableStateOf(false) }
     val viewState = remember { mutableStateOf(ExtractedTextResultState.default()) }
+    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
     Scaffold(
         topBar = {
@@ -79,59 +84,70 @@ fun ExtractedTextResultScreen(
                     viewState.value.result != null -> {
                         Text(
                             text = viewState.value.result!!,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.background(Color.LightGray)
+                                .padding(16.dp)
+                                .fillMaxSize()
                         )
                     }
 
                     viewState.value.error != null -> {
                         Text(
                             text = viewState.value.error!!,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.background(Color.LightGray)
+                                .padding(16.dp)
+                                .fillMaxSize()
                         )
                     }
                 }
             }
         },
         bottomBar = {
-            Column {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.LightGray)
-                ) {
-                    item {
-                        SelectableChipRow(
-                            chipList = ChipActionItem.values().toList(),
-                            selectedChip = selectedChip,
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            isGeneratingResult.value = true
-
-                            coroutineScope.launch {
-                                val promptText = extractedText.replace("\n", " ")
-                                val result = getCompletions.invoke(
-                                    CompletionRequest(
-                                        prompt = ("${selectedChip.value} this text: $promptText"),
-                                    )
-                                )
-
-                                viewState.value = result.toState()
-
-                                isGeneratingResult.value = false
-                            }
-                        },
+            AnimatedVisibility(
+                visible = bottomBarState.value,
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it }),
+            ) {
+                Column {
+                    LazyRow(
                         modifier = Modifier
-                            .align(Alignment.BottomEnd)
+                            .fillMaxWidth()
+                            .background(Color.LightGray)
                     ) {
-                        Text(text = "Generate")
+                        item {
+                            SelectableChipRow(
+                                chipList = ChipActionItem.values().toList(),
+                                selectedChip = selectedChip,
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                isGeneratingResult.value = true
+                                bottomBarState.value = false
+
+                                coroutineScope.launch {
+                                    val promptText = extractedText.replace("\n", " ")
+                                    val result = getCompletions.invoke(
+                                        CompletionRequest(
+                                            prompt = ("${selectedChip.value} this text: $promptText"),
+                                        )
+                                    )
+
+                                    viewState.value = result.toState()
+
+                                    isGeneratingResult.value = false
+                                }
+                            },
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                        ) {
+                            Text(text = "Generate")
+                        }
                     }
                 }
             }
