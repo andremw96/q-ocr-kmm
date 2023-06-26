@@ -74,6 +74,22 @@ fun ExtractedTextResultScreen(
                         strokeWidth = 8.dp,
                     )
                 }
+
+                when {
+                    viewState.value.result != null -> {
+                        Text(
+                            text = viewState.value.result!!,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+
+                    viewState.value.error != null -> {
+                        Text(
+                            text = viewState.value.error!!,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
             }
         },
         bottomBar = {
@@ -100,9 +116,10 @@ fun ExtractedTextResultScreen(
                             isGeneratingResult.value = true
 
                             coroutineScope.launch {
+                                val promptText = extractedText.replace("\n", " ")
                                 val result = getCompletions.invoke(
                                     CompletionRequest(
-                                        prompt = extractedText.replace("\n", " "),
+                                        prompt = ("${selectedChip.value} this text: $promptText"),
                                     )
                                 )
 
