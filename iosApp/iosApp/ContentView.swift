@@ -9,8 +9,9 @@ struct ContentView: View {
 }
 
 struct ComposeView: UIViewControllerRepresentable {
+
     func makeUIViewController(context: Context) -> UIViewController {
-        return MainScreenIosKt.MainViewController()
+        return MainScreenIosKt.MainViewController(injectionHelper: InjectionHelper())
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
