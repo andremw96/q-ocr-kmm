@@ -6,6 +6,10 @@ interface Screen
 
 expect class CameraScreen() : Screen
 
+expect class ImagePickerScreen() : Screen
+
+expect class MenuScreen() : Screen
+
 expect class ExtractedTextScreen(
     extractedText: String,
     capturedImage: ImageBitmap

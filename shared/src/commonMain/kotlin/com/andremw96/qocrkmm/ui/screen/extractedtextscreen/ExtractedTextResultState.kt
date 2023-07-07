@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui.extractedtextscreen
+package com.andremw96.qocrkmm.ui.screen.extractedtextscreen
 
 import com.andremw96.qocrkmm.common.Resource
 import com.andremw96.qocrkmm.model.CompletionErrorSchema

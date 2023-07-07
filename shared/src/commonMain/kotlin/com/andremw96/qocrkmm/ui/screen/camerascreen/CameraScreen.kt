@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui.camerascreen
+package com.andremw96.qocrkmm.ui.screen.camerascreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui.extractedtextscreen
+package com.andremw96.qocrkmm.ui.screen.extractedtextscreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically

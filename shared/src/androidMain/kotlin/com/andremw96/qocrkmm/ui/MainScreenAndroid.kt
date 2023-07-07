@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.andremw96.qocrkmm.domain.GetCompletions
+import com.andremw96.qocrkmm.ui.screen.MainScreen
 
 @Composable
 fun MainScreenAndroid(

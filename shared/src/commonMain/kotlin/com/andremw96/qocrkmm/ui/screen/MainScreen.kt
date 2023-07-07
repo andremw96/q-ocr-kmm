@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui
+package com.andremw96.qocrkmm.ui.screen
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -12,12 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.andremw96.qocrkmm.android.MyApplicationTheme
 import com.andremw96.qocrkmm.domain.GetCompletions
-import com.andremw96.qocrkmm.ui.camerascreen.CameraScreenComposable
-import com.andremw96.qocrkmm.ui.extractedtextscreen.ExtractedTextResultScreen
-import com.andremw96.qocrkmm.ui.navigation.CameraScreen
-import com.andremw96.qocrkmm.ui.navigation.ExtractedTextScreen
-import com.andremw96.qocrkmm.ui.navigation.NavigationStack
-import com.andremw96.qocrkmm.ui.navigation.Screen
+import com.andremw96.qocrkmm.ui.navigation.*
+import com.andremw96.qocrkmm.ui.screen.camerascreen.CameraScreenComposable
+import com.andremw96.qocrkmm.ui.screen.extractedtextscreen.ExtractedTextResultScreen
+import com.andremw96.qocrkmm.ui.screen.imagepickerscreen.ImagePickerScreenComposable
+import com.andremw96.qocrkmm.ui.screen.menuscreen.MenuScreenComposable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -37,7 +36,7 @@ fun MainScreen(
                     save = { it.stack },
                 )
             ) {
-                NavigationStack(CameraScreen())
+                NavigationStack(MenuScreen())
             }
 
             AnimatedContent(targetState = navigationStack.lastWithIndex(), transitionSpec = {
@@ -52,6 +51,15 @@ fun MainScreen(
                 }
             }) { (_, page) ->
                 when (page) {
+                    is ImagePickerScreen -> {
+                        ImagePickerScreenComposable { extractedText, capturedImage ->
+                            navigationStack.push(
+                                ExtractedTextScreen(
+                                    extractedText, capturedImage
+                                )
+                            )
+                        }
+                    }
                     is CameraScreen -> {
                         CameraScreenComposable { extractedText, capturedImage ->
                             navigationStack.push(
@@ -69,6 +77,11 @@ fun MainScreen(
                                 navigationStack.back()
                             },
                             getCompletions = getCompletions,
+                        )
+                    }
+                    is MenuScreen -> {
+                        MenuScreenComposable(
+                            navigationStack
                         )
                     }
                 }

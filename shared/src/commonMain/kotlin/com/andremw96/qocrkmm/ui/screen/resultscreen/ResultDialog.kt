@@ -1,4 +1,4 @@
-package com.andremw96.qocrkmm.ui.resultscreen
+package com.andremw96.qocrkmm.ui.screen.resultscreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Popup
