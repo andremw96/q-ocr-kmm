@@ -11,21 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.unit.dp
-import com.andremw96.qocrkmm.getTempImageURL
-import com.andremw96.qocrkmm.readBytes
-import com.andremw96.qocrkmm.toImageBitmap
 import com.andremw96.qocrkmm.ui.icon.IconPhotoCamera
 import com.andremw96.qocrkmm.ui.view.CircularButton
 import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ObjCAction
-import kotlinx.cinterop.useContents
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import platform.AVFoundation.*
 import platform.CoreGraphics.CGRect
-import platform.CoreLocation.CLLocation
-import platform.CoreLocation.CLLocationManager
-import platform.CoreLocation.kCLLocationAccuracyBest
 import platform.Foundation.NSError
 import platform.Foundation.NSNotification
 import platform.Foundation.NSNotificationCenter
@@ -52,7 +43,7 @@ private val deviceTypes = listOf(
 @Composable
 actual fun CameraView(
     modifier: Modifier,
-    onTextGenerated: (text: String, image: ImageBitmap?,) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
 ) {
     var cameraAccess: CameraAccess by remember { mutableStateOf(CameraAccess.Undefined) }
     LaunchedEffect(Unit) {
@@ -120,7 +111,7 @@ private fun BoxScope.AuthorizedCamera(
 @Composable
 private fun BoxScope.RealDeviceCamera(
     camera: AVCaptureDevice,
-    onTextGenerated: (text: String, image: ImageBitmap?,) -> Unit
+    onTextGenerated: (text: String, image: ImageBitmap?) -> Unit
 ) {
     val capturePhotoOutput = remember { AVCapturePhotoOutput() }
     var actualOrientation by remember {
