@@ -52,22 +52,32 @@ fun MainScreen(
             }) { (_, page) ->
                 when (page) {
                     is ImagePickerScreen -> {
-                        ImagePickerScreenComposable { extractedText, capturedImage ->
-                            navigationStack.push(
-                                ExtractedTextScreen(
-                                    extractedText, capturedImage
+                        ImagePickerScreenComposable(
+                            onTextGenerated = { extractedText, capturedImage ->
+                                navigationStack.push(
+                                    ExtractedTextScreen(
+                                        extractedText, capturedImage
+                                    )
                                 )
-                            )
-                        }
+                            },
+                            onBack = {
+                                navigationStack.back()
+                            }
+                        )
                     }
                     is CameraScreen -> {
-                        CameraScreenComposable { extractedText, capturedImage ->
-                            navigationStack.push(
-                                ExtractedTextScreen(
-                                    extractedText, capturedImage
+                        CameraScreenComposable(
+                            onTextGenerated = { extractedText, capturedImage ->
+                                navigationStack.push(
+                                    ExtractedTextScreen(
+                                        extractedText, capturedImage
+                                    )
                                 )
-                            )
-                        }
+                            },
+                            onBack = {
+                                navigationStack.back()
+                            }
+                        )
                     }
                     is ExtractedTextScreen -> {
                         ExtractedTextResultScreen(
