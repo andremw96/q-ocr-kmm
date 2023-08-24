@@ -16,7 +16,7 @@ buildkonfig {
 
     defaultConfigs {
         buildConfigField(STRING, "BASE_API_URL", "https://api.openai.com/v1/")
-        buildConfigField(STRING, "CHAT_GPT_API_KEY", "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")
+        buildConfigField(STRING, "CHAT_GPT_API_KEY", "/*FILL IN WITH YOUR CHAT GPT API KEY*/")
     }
 }
 
